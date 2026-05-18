@@ -280,7 +280,7 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
 
   <div class="cov-box">
-    <div class="cov-box-title">🦠 SARS-CoV-2 mechanistic context — for Dr. Jaimes</div>
+    <div class="cov-box-title">🦠 SARS-CoV-2 mechanistic context — for review</div>
     <p>All three signals are consistent with known SARS-CoV-2 evasion strategies. <strong>NSP3 and NSP4</strong> anchor the replication complex to mitochondria-associated membranes (MAMs), disrupting mitochondrial dynamics. <strong>ORF3a</strong> activates the NLRP3 inflammasome while simultaneously suppressing type I IFN signaling — which would explain the IFNB1/ISG15 paradox observed here. <strong>Spike protein</strong> has been shown to directly interact with ACE2 on mitochondrial membranes, and persistent Spike antigen has been detected months post-infection. The complement data (C4BPA, CFH up; C3AR1 down) matches the "complement dysregulation without membrane attack" pattern described by Afrin et al. 2020 and Jacobs et al. 2022 in long-haulers.</p>
     <div class="ref">Ref: Jiang H et al., Science 2021 · Jacobs et al., JCI 2022 · Choudhary et al., Cell Reports 2021</div>
   </div>
@@ -320,7 +320,7 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
 
   <div class="cov-box">
-    <div class="cov-box-title">🔬 Mechanistic hypothesis for Dr. Jaimes</div>
+    <div class="cov-box-title">🔬 Mechanistic hypothesis for review</div>
     <p>The elevation of <strong>MTERF1</strong> (mitochondrial transcription terminator factor 1) alongside silenced OXPHOS is a potential smoking gun. MTERF1 normally terminates transcription at the 16S rRNA gene. When overexpressed, it can outcompete TFAM (mitochondrial transcription factor A) for D-loop binding, effectively blocking the transcription of Complex I–IV subunits encoded by mtDNA.</p>
     <p style="margin-top:8px">This is exactly the type of <strong>dominant negative mtDNA control</strong> that SARS-CoV-2 NSP12 (RNA-dependent RNA polymerase) has been proposed to induce by competing with mitochondrial RNA polymerase (POLRMT), diverting polymerase activity away from mitochondrial genome transcription. If viral RNA persists — even at low levels — this competition could sustain the phenotype.</p>
     <div class="ref">Key question for your expertise: Is NSP12's affinity for POLRMT sufficient to explain persistent MTERF1 upregulation post-acute infection?</div>
@@ -397,7 +397,7 @@ footer a{color:var(--accent);text-decoration:none}
   </div>
 
   <div class="q-box" style="margin-top:14px">
-    <div class="q-box-title">🔑 Questions for Dr. Jaimes — where to focus structurally</div>
+    <div class="q-box-title">🔑 Questions for review — where to focus structurally</div>
     <div class="q-item"><span class="q-num">Q1</span><span>The hub <span class="hl hl-hub">SDHA</span> (Complex II, elevated) sits between OXPHOS and TCA. Could succinate accumulation from SDHA-SDHC imbalance be activating HIF-1α and sustaining the IFNB1 signal even in the absence of viral replication?</span></div>
     <div class="q-item"><span class="q-num">Q2</span><span><span class="hl hl-hub">MT-CO1</span> (Complex IV, most silenced in absolute value) has known structural sites for Cu²⁺ coordination. Is there any evidence that SARS-CoV-2 proteins perturb copper homeostasis in mitochondria, which would affect cytochrome c oxidase assembly?</span></div>
     <div class="q-item"><span class="q-num">Q3</span><span>The <span class="hl hl-hub">MTERF1</span>–<span class="hl hl-up">TWNK</span>–<span class="hl hl-up">TEFM</span> triad (all elevated) forms the mtDNA maintenance complex. Could this be a cellular stress response to viral RNA competing with mitochondrial RNAP — and is this reversible?</span></div>
@@ -494,15 +494,6 @@ footer a{color:var(--accent);text-decoration:none}
     </div>
   </div>
 
-  <div class="cov-box">
-    <div class="cov-box-title">🎯 Suggested next steps — bioinformatic + structural</div>
-    <p><strong>Step 1 — STRING PPI:</strong> Submit the 31 mitochondrial genes to STRING (string-db.org) to compute network centrality. SDHA and MT-CO1 are predicted hubs — confirm by betweenness centrality (NetworkAnalyzer in Cytoscape).</p>
-    <p style="margin-top:6px"><strong>Step 2 — AlphaFold2 structures:</strong> Retrieve AF2 predictions for SDHA (P31040), MTERF1 (O95258), and MT-CO1 (P00395). Visualize Cu²⁺ binding sites in MT-CO1 using PyMOL or ChimeraX. Cross-reference with known SARS-CoV-2 protein interaction sites.</p>
-    <p style="margin-top:6px"><strong>Step 3 — Molecular docking:</strong> If any of the elevated maintenance proteins (MTERF1, RARS2, TWNK) interact with known CoV non-structural proteins (NSP7, NSP8, NSP12 — the replication complex), docking could reveal if viral RNA hijacking of mtRNAP is structurally plausible.</p>
-    <p style="margin-top:6px"><strong>Step 4 — Enrichr validation:</strong> Submit the 31 mito genes to Enrichr → KEGG_2021_Human + MitoCarta3.0 to confirm OXPHOS enrichment with corrected p-values. Then cross-reference with MSigDB C3 (transcription factor targets) to identify which TF could be suppressing Complexes I–V simultaneously.</p>
-    <div class="ref">AlphaFold DB: alphafold.ebi.ac.uk · STRING: string-db.org · MitoCarta3.0: broadinstitute.org/mitocarta · Enrichr: maayanlab.cloud/Enrichr</div>
-  </div>
-
   <div class="card">
     <div class="card-title" style="color:var(--up2)">All 58 elevated genes</div>
     <div class="gene-grid" id="all-up-pills"></div>
@@ -523,7 +514,7 @@ footer a{color:var(--accent);text-decoration:none}
 <hr class="divider">
 
 <footer>
-  <span>Long COVID Transcriptomics · Patient Sample #1345233438 · Prepared for <a href="https://www.javierjaimes.com" target="_blank">Dr. Javier A. Jaimes, DVM, PhD</a> · UMass Chan Medical School</span>
+  <span>Long COVID Transcriptomics · Patient Sample #1345233438 · Prepared by <a https://generative-art-port.vercel.app/">Angie Plazas, for review</a> · National University of Colombia</span>
   <span>Bioinformatic analysis developed by <strong>noomesk</strong> · 3,032 genes evaluated · 27 functional panels</span>
 </footer>
 
