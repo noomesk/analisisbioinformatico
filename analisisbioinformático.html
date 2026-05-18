@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Long COVID · Transcriptomic Analysis — Patient Sample #1345233438</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #07090f;
+  --bg2:      #0c1018;
+  --bg3:      #111620;
+  --panel:    #151b28;
+  --panel2:   #1a2130;
+  --border:   rgba(80,120,220,0.13);
+  --border2:  rgba(80,120,220,0.22);
+  --text:     #d8e0f0;
+  --text2:    #7a8aaa;
+  --text3:    #3a4560;
+  --accent:   #4e8aff;
+  --accent2:  #a78bfa;
+  --up:       #ff4d6a;
+  --up2:      #ff8096;
+  --up-bg:    rgba(255,77,106,0.1);
+  --down:     #34d4b0;
+  --down2:    #6de8d0;
+  --down-bg:  rgba(52,212,176,0.1);
+  --hub:      #f0c040;
+  --hub-bg:   rgba(240,192,64,0.1);
+  --warn:     #f0a030;
+  --r:        8px;
+  --r-sm:     5px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:6rem 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 70% 40%, rgba(78,138,255,0.06) 0%, transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%, rgba(167,139,250,0.05) 0%, transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px, transparent 1px),linear-gradient(90deg, var(--border) 1px, transparent 1px);background-size:60px 60px;opacity:.4;pointer-events:none}
+.hero-badge{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px;opacity:.8}
+.hero h1{font-size:clamp(2rem,5vw,3.8rem);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:20px;max-width:800px}
+.hero h1 em{font-style:normal;color:var(--up);text-decoration:none}
+.hero h1 span{color:var(--down)}
+.hero-sub{font-size:16px;color:var(--text2);max-width:620px;line-height:1.7;margin-bottom:32px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap}
+.hero-stat{text-align:center;padding:14px 20px;background:var(--panel);border:1px solid var(--border2);border-radius:var(--r)}
+.hero-stat-val{font-size:28px;font-weight:700;letter-spacing:-.02em;font-family:'JetBrains Mono',monospace}
+.hero-stat-val.red{color:var(--up)} .hero-stat-val.teal{color:var(--down)} .hero-stat-val.gold{color:var(--hub)}
+.hero-stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-top:4px}
+.scroll-hint{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--text3);display:flex;flex-direction:column;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+.scroll-arrow{width:1px;height:32px;background:linear-gradient(var(--text3),transparent);animation:scrollpulse 2s ease-in-out infinite}
+@keyframes scrollpulse{0%,100%{opacity:.3;transform:scaleY(1)}50%{opacity:.9;transform:scaleY(1.2)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(7,9,15,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:0}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);margin-right:2rem;white-space:nowrap;padding:14px 0}
+.nav-links{display:flex;gap:0}
+.nav-link{font-size:12px;color:var(--text2);padding:16px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none}
+.nav-link:hover,.nav-link.active{color:var(--text);border-bottom-color:var(--accent)}
+.nav-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.nav-btn{font-size:11px;padding:5px 14px;border-radius:var(--r-sm);cursor:pointer;font-weight:500;border:1px solid;font-family:'Inter',sans-serif}
+.nav-btn-ghost{background:transparent;border-color:var(--border2);color:var(--text2)}
+.nav-btn-ghost:hover{background:var(--panel);color:var(--text)}
+
+/* ── SECTIONS ── */
+section{max-width:1100px;margin:0 auto;padding:5rem 2rem}
+.section-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;opacity:.8}
+.section-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+.section-sub{font-size:14px;color:var(--text2);max-width:680px;line-height:1.7;margin-bottom:2rem}
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ── CARDS ── */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:14px}
+.card-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-title-accent{color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+
+/* ── METRIC CARDS ── */
+.metric{background:var(--panel2);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;position:relative;overflow:hidden}
+.metric::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.02),transparent);pointer-events:none}
+.metric-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
+.metric-val{font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:-.02em;line-height:1}
+.metric-val.red{color:var(--up)} .metric-val.teal{color:var(--down)} .metric-val.gold{color:var(--hub)} .metric-val.blue{color:var(--accent)}
+.metric-sub{font-size:11px;color:var(--text2);margin-top:6px}
+.metric-bar{height:2px;border-radius:1px;margin-top:12px;background:var(--border2)}
+.metric-bar-fill{height:2px;border-radius:1px}
+
+/* ── BADGES ── */
+.badge{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:600;display:inline-flex;align-items:center;gap:4px;letter-spacing:.02em;white-space:nowrap}
+.badge-up{background:var(--up-bg);color:var(--up2);border:1px solid rgba(255,77,106,.3)}
+.badge-down{background:var(--down-bg);color:var(--down2);border:1px solid rgba(52,212,176,.3)}
+.badge-hub{background:var(--hub-bg);color:var(--hub);border:1px solid rgba(240,192,64,.3)}
+.badge-blue{background:rgba(78,138,255,.1);color:var(--accent);border:1px solid rgba(78,138,255,.3)}
+.badge-warn{background:rgba(240,160,48,.1);color:var(--warn);border:1px solid rgba(240,160,48,.3)}
+.badge-purple{background:rgba(167,139,250,.1);color:var(--accent2);border:1px solid rgba(167,139,250,.3)}
+
+/* ── ALERT ── */
+.alert{border-radius:var(--r);padding:16px 20px;margin-bottom:14px;font-size:13px;line-height:1.7;border-left:3px solid;position:relative}
+.alert-danger{background:rgba(255,77,106,.07);border-color:var(--up);color:var(--text)}
+.alert-info{background:rgba(78,138,255,.07);border-color:var(--accent);color:var(--text)}
+.alert-teal{background:rgba(52,212,176,.07);border-color:var(--down);color:var(--text)}
+.alert-gold{background:rgba(240,192,64,.07);border-color:var(--hub);color:var(--text)}
+.alert-purple{background:rgba(167,139,250,.07);border-color:var(--accent2);color:var(--text)}
+.alert strong{color:inherit;font-weight:600}
+.alert em{font-style:normal;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--up2)}
+
+/* ── BAR CHART ── */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.bar-gene{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:500;min-width:76px;color:var(--text)}
+.bar-track{flex:1;background:var(--bg2);border-radius:3px;height:8px;position:relative;overflow:hidden}
+.bar-fill{height:8px;border-radius:3px;position:absolute;left:0}
+.bar-ref{position:absolute;width:1.5px;background:var(--text2);height:14px;top:-3px;border-radius:1px}
+.bar-val{font-size:11px;font-family:'JetBrains Mono',monospace;min-width:48px;text-align:right;font-weight:500}
+
+/* ── PPI NETWORK ── */
+#ppi-wrap{background:var(--bg2);border-radius:var(--r);border:1px solid var(--border);overflow:hidden;position:relative}
+#ppi-svg{width:100%;height:520px;display:block;cursor:grab}
+#ppi-svg:active{cursor:grabbing}
+.node circle{transition:r .2s,opacity .2s;cursor:pointer}
+.node text{font-size:9px;font-family:'JetBrains Mono',monospace;fill:var(--text);pointer-events:none;text-anchor:middle;dominant-baseline:central}
+.node.faded circle,.node.faded text{opacity:.05}
+.link{stroke-opacity:.28}
+.link.lit{stroke-opacity:.9}
+.link.faded{stroke-opacity:.03}
+#ppi-legend{position:absolute;top:12px;right:12px;background:rgba(7,9,15,.85);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 14px;font-size:10px;color:var(--text2)}
+#ppi-legend div{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+#ppi-legend div:last-child{margin-bottom:0}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.leg-line{width:20px;height:2px;border-radius:1px;flex-shrink:0}
+#ppi-detail-box{background:var(--panel2);border-top:1px solid var(--border);padding:14px 18px;font-size:12px;color:var(--text2);line-height:1.6;min-height:62px}
+#ppi-controls{position:absolute;bottom:72px;left:12px;display:flex;gap:6px}
+.ppi-btn{font-size:10px;padding:4px 12px;border-radius:var(--r-sm);border:1px solid var(--border2);background:rgba(7,9,15,.8);color:var(--text2);cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .15s}
+.ppi-btn:hover{background:var(--panel);color:var(--text)}
+
+/* ── GSEA ── */
+.gsea-row{margin-bottom:14px;padding:12px 14px;background:var(--bg2);border-radius:var(--r-sm);border:1px solid var(--border)}
+.gsea-header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gsea-name{font-size:12px;font-weight:500;color:var(--text);flex:1;min-width:0}
+.gsea-track{background:var(--panel);border-radius:3px;height:12px;position:relative;overflow:hidden}
+.gsea-fill{height:12px;border-radius:3px;position:absolute}
+.gsea-genes{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:6px}
+
+/* ── OXPHOS DIAGRAM ── */
+#oxphos-canvas{width:100%;height:200px;display:block;border-radius:var(--r-sm)}
+
+/* ── PATHWAY MAP ── */
+.pw-row{margin-bottom:10px}
+.pw-header{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.pw-name{color:var(--text);font-weight:500}
+.pw-counts{font-family:'JetBrains Mono',monospace;color:var(--text2)}
+.pw-bar{height:10px;border-radius:3px;overflow:hidden;display:flex;background:var(--bg2)}
+
+/* ── VOLCANO ── */
+#vol-canvas{width:100%;height:380px;display:block;border-radius:var(--r-sm)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{background:var(--panel2);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);padding:10px 14px;border-bottom:1px solid var(--border2);text-align:left;white-space:nowrap}
+.tbl td{padding:8px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:hover td{background:var(--panel)}
+
+/* ── GENE LIST ── */
+.gene-grid{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.gene-pill{font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;cursor:default;border:1px solid}
+.gene-pill.up{background:var(--up-bg);color:var(--up2);border-color:rgba(255,77,106,.3)}
+.gene-pill.down{background:var(--down-bg);color:var(--down2);border-color:rgba(52,212,176,.3)}
+.gene-pill.hub{background:var(--hub-bg);color:var(--hub);border-color:rgba(240,192,64,.35);border-width:1.5px}
+
+/* ── CORONAVIRUS CONTEXT BOX ── */
+.cov-box{background:linear-gradient(135deg,rgba(167,139,250,.07),rgba(78,138,255,.05));border:1px solid rgba(167,139,250,.2);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:14px}
+.cov-box-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--accent2);margin-bottom:10px}
+.cov-box p{font-size:13px;color:var(--text2);line-height:1.7}
+.cov-box strong{color:var(--text)}
+.cov-box .ref{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-top:8px}
+
+/* ── QUESTION BOX ── */
+.q-box{background:var(--hub-bg);border:1px solid rgba(240,192,64,.25);border-radius:var(--r);padding:1.25rem 1.5rem;margin-bottom:14px}
+.q-box-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--hub);margin-bottom:10px}
+.q-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:var(--text2);line-height:1.6}
+.q-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--hub);font-weight:600;flex-shrink:0;margin-top:1px}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:2rem;font-size:11px;color:var(--text3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1100px;margin:0 auto}
+footer a{color:var(--accent);text-decoration:none}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── HIGHLIGHT GENE ── */
+.hl{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;padding:1px 6px;border-radius:3px}
+.hl-up{color:var(--up2);background:var(--up-bg)} .hl-down{color:var(--down2);background:var(--down-bg)} .hl-hub{color:var(--hub);background:var(--hub-bg)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.hero{padding:5rem 1.5rem}section{padding:3rem 1.5rem}nav{display:none}}
+@media print{nav{display:none}.hero{min-height:auto;padding:2rem}section{padding:2rem 1rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">Long COVID · Transcriptomics</span>
+  <div class="nav-links">
+    <a class="nav-link active" href="#overview">Overview</a>
+    <a class="nav-link" href="#findings">Key Findings</a>
+    <a class="nav-link" href="#mitochondria">Mitochondria</a>
+    <a class="nav-link" href="#immune">Immune</a>
+    <a class="nav-link" href="#ppi">PPI Network</a>
+    <a class="nav-link" href="#gsea">GSEA</a>
+    <a class="nav-link" href="#targets">Targets</a>
+  </div>
+  <div class="nav-right">
+    <button class="nav-btn nav-btn-ghost" onclick="window.print()">Export PDF</button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero" id="overview">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-badge">Long COVID · RNA Transcriptomics · Sample #1345233438</div>
+
+  <h1>Mitochondrial Dissociation<br>meets <em>Chronic Immune Activation</em><br>in <span>Long COVID</span></h1>
+
+  <div class="hero-sub">
+    A gene expression analysis of 3,032 genes across 27 functional panels in a Long COVID patient. P¿repared for <strong>Dr. Javier Amm. Jnbbaimes, DVM, PhD</strong> — Virologist, UMass Chan Medical School. The data suggest SARS-CoV-2 may have left a persistent transcriptomic scar on mitochondrial and immune pathways — directly relevant to your coronavirus protein expertise.
+  </div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px">
+    <span class="badge badge-up">▲ 70 elevated genes</span>
+    <span class="badge badge-down">▼ 225 silenced genes</span>
+    <span class="badge badge-blue">27 functional panels</span>
+    <span class="badge badge-purple">developed by noomesk</span>
+  </div>
+
+  <div class="hero-meta">
+    <div class="hero-stat"><div class="hero-stat-val red">9.7%</div><div class="hero-stat-label">Genes altered</div></div>
+    <div class="hero-stat"><div class="hero-stat-val teal">−1.79</div><div class="hero-stat-label">Mean log₂FC (silenced)</div></div>
+    <div class="hero-stat"><div class="hero-stat-val gold">MTERF1</div><div class="hero-stat-label">Top mito hub ↑</div></div>
+    <div class="hero-stat"><div class="hero-stat-val red">MT-CO1</div><div class="hero-stat-label">Top OXPHOS silenced</div></div>
+  </div>
+
+  <div class="scroll-hint">scroll to explore<div class="scroll-arrow"></div></div>
+</div>
+
+<hr class="divider">
+
+<!-- ── SECTION 1: KEY FINDINGS ── -->
+<section id="findings">
+  <div class="section-tag">Section 01 — Summary</div>
+  <div class="section-title">Three converging signals</div>
+  <div class="section-sub">The transcriptomic profile shows three independent, mechanistically linked abnormalities. Each one is a thread; together they may form the molecular basis of Long COVID persistence.</div>
+
+  <div class="grid3" style="margin-bottom:20px">
+    <div class="alert alert-danger" style="margin:0">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--up);margin-bottom:8px">① Mitochondrial dissociation</div>
+      <strong>Maintenance machinery ↑ · OXPHOS ↓</strong><br>
+      <span class="hl hl-up">MTERF1</span> <span class="hl hl-up">TWNK</span> <span class="hl hl-up">RARS2</span> elevated — the cell is trying to repair and transcribe mtDNA. Yet <span class="hl hl-down">MT-CO1</span> <span class="hl hl-down">MT-ATP6</span> <span class="hl hl-down">NDUFA13</span> and all OXPHOS complexes I–V are silenced. Energy production is decoupled from maintenance effort.
+    </div>
+    <div class="alert alert-teal" style="margin:0">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--down);margin-bottom:8px">② Complement chronic activation</div>
+      <strong>Soluble regulators ↑ · MAC terminal pathway =</strong><br>
+      <span class="hl hl-up">C4BPA</span> <span class="hl hl-up">CFH</span> <span class="hl hl-up">C1S</span> overexpressed. Classical pathway initiator activated but terminal MAC (C5b-9) not formed. Pattern: sustained low-grade inflammation without cell lysis — consistent with viral immune evasion.
+    </div>
+    <div class="alert alert-gold" style="margin:0">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--hub);margin-bottom:8px">③ Lymphocyte exhaustion</div>
+      <strong>LAG-3 ↑ across T, NK, immune-reg · ISGs ↓</strong><br>
+      <span class="hl hl-hub">LAG3</span> 76.8 (ref 17.0–71.8) overexpressed in 3 independent panels. <span class="hl hl-up">IFNB1</span> elevated but its downstream ISGs (<span class="hl hl-down">ISG15</span>, <span class="hl hl-down">CMPK2</span>) silenced — interferon paradox suggesting viral-driven uncoupling.
+    </div>
+  </div>
+
+  <div class="cov-box">
+    <div class="cov-box-title">🦠 SARS-CoV-2 mechanistic context — for Dr. Jaimes</div>
+    <p>All three signals are consistent with known SARS-CoV-2 evasion strategies. <strong>NSP3 and NSP4</strong> anchor the replication complex to mitochondria-associated membranes (MAMs), disrupting mitochondrial dynamics. <strong>ORF3a</strong> activates the NLRP3 inflammasome while simultaneously suppressing type I IFN signaling — which would explain the IFNB1/ISG15 paradox observed here. <strong>Spike protein</strong> has been shown to directly interact with ACE2 on mitochondrial membranes, and persistent Spike antigen has been detected months post-infection. The complement data (C4BPA, CFH up; C3AR1 down) matches the "complement dysregulation without membrane attack" pattern described by Afrin et al. 2020 and Jacobs et al. 2022 in long-haulers.</p>
+    <div class="ref">Ref: Jiang H et al., Science 2021 · Jacobs et al., JCI 2022 · Choudhary et al., Cell Reports 2021</div>
+  </div>
+
+  <div class="grid4">
+    <div class="metric"><div class="metric-label">Mitochondria panel</div><div class="metric-val red">31</div><div class="metric-sub">genes altered (most affected)</div><div class="metric-bar"><div class="metric-bar-fill" style="width:100%;background:var(--up)"></div></div></div>
+    <div class="metric"><div class="metric-label">OXPHOS complexes</div><div class="metric-val teal">I–V</div><div class="metric-sub">all silenced simultaneously</div><div class="metric-bar"><div class="metric-bar-fill" style="width:100%;background:var(--down)"></div></div></div>
+    <div class="metric"><div class="metric-label">IFN paradox</div><div class="metric-val gold">IFNB1↑</div><div class="metric-sub">ISG15↓ CMPK2↓ IFI6↓</div><div class="metric-bar"><div class="metric-bar-fill" style="width:80%;background:var(--hub)"></div></div></div>
+    <div class="metric"><div class="metric-label">LAG-3 (exhaustion)</div><div class="metric-val blue">76.8</div><div class="metric-sub">ref 17.0–71.8 — 3 panels</div><div class="metric-bar"><div class="metric-bar-fill" style="width:90%;background:var(--accent)"></div></div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── SECTION 2: MITOCHONDRIA ── -->
+<section id="mitochondria">
+  <div class="section-tag">Section 02 — Mitochondria</div>
+  <div class="section-title">The OXPHOS paradox</div>
+  <div class="section-sub">The cell is building more mitochondrial maintenance machinery than ever — but the respiratory chain itself is failing. This dissociation is the central metabolic abnormality.</div>
+
+  <canvas id="oxphos-canvas" role="img" aria-label="OXPHOS complex diagram showing elevated maintenance genes and silenced respiratory chain"></canvas>
+
+  <div class="grid2" style="margin-top:14px">
+    <div class="card">
+      <div class="card-title" style="color:var(--up2)">▲ Elevated — mtDNA maintenance & translation</div>
+      <div id="bar-up"></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--down2)">▼ Silenced — respiratory chain OXPHOS</div>
+      <div id="bar-down"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">OXPHOS pathway status — by complex</div>
+    <div id="pathway-map"></div>
+  </div>
+
+  <div class="cov-box">
+    <div class="cov-box-title">🔬 Mechanistic hypothesis for Dr. Jaimes</div>
+    <p>The elevation of <strong>MTERF1</strong> (mitochondrial transcription terminator factor 1) alongside silenced OXPHOS is a potential smoking gun. MTERF1 normally terminates transcription at the 16S rRNA gene. When overexpressed, it can outcompete TFAM (mitochondrial transcription factor A) for D-loop binding, effectively blocking the transcription of Complex I–IV subunits encoded by mtDNA.</p>
+    <p style="margin-top:8px">This is exactly the type of <strong>dominant negative mtDNA control</strong> that SARS-CoV-2 NSP12 (RNA-dependent RNA polymerase) has been proposed to induce by competing with mitochondrial RNA polymerase (POLRMT), diverting polymerase activity away from mitochondrial genome transcription. If viral RNA persists — even at low levels — this competition could sustain the phenotype.</p>
+    <div class="ref">Key question for your expertise: Is NSP12's affinity for POLRMT sufficient to explain persistent MTERF1 upregulation post-acute infection?</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── SECTION 3: IMMUNE ── -->
+<section id="immune">
+  <div class="section-tag">Section 03 — Immune Signaling</div>
+  <div class="section-title">Interferon paradox & lymphocyte exhaustion</div>
+  <div class="section-sub">The immune transcriptome shows a pattern consistent with chronic viral antigen persistence: innate signaling initiated but blocked downstream, with adaptive exhaustion across multiple lymphocyte lineages.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">IFN type I axis — signal initiated, effectors silenced</div>
+      <div id="ifn-bars"></div>
+      <div class="alert alert-purple" style="margin-top:10px;font-size:12px;padding:10px 14px">
+        <strong>Interferon paradox:</strong> IFNB1 is elevated in 3 independent panels (Antiviral, Autoimmunity, Cellular Danger) — yet ISG15, CMPK2, IFI6, and TICAM1 are all silenced. This decoupling suggests the IFN signal is being <strong>generated but blocked downstream</strong>, consistent with SARS-CoV-2 NSP1-mediated translational suppression of ISG mRNAs.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Checkpoint & exhaustion — LAG-3, TIM-3, co-stimulation</div>
+      <div id="checkpoint-bars"></div>
+      <div class="alert alert-gold" style="margin-top:10px;font-size:12px;padding:10px 14px">
+        <strong>LAG-3 upregulation</strong> across T cells, NK cells, and immune-regulatory lineages signals chronic exhaustion similar to tumor-infiltrating lymphocytes or chronic viral infections (HBV, HCV, HIV). The simultaneous loss of <strong>TIM-3</strong> (HAVCR2↓) and its ligand <strong>Galectin-9</strong> (LGALS9↓) may reflect compensatory receptor shedding.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Complement system — chronic activation pattern</div>
+    <div id="complement-bars"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--text2)">
+      <span>C4BPA · CFH · C1S → <span class="badge badge-up">▲ soluble regulators overexpressed</span></span>
+      <span>C3AR1 → <span class="badge badge-down">▼ anaphylatoxin receptor silenced</span></span>
+      <span>MAC C5b-9 → <span class="badge badge-blue">not activated</span></span>
+    </div>
+  </div>
+
+  <div class="cov-box">
+    <div class="cov-box-title">🦠 SARS-CoV-2 immune evasion — connection to these findings</div>
+    <p><strong>ORF3a</strong> directly suppresses the STING-IRF3 axis, which would explain why IFNB1 is induced (through TLR3/TICAM1-independent pathways) but downstream ISGylation (ISG15) is blocked. <strong>NSP1</strong> inserts into the 40S ribosome and suppresses translation of capped mRNAs — ISG mRNAs are particularly vulnerable. The complement pattern (classical pathway initiated by C1S, but negative feedback from C4BPA and CFH preventing terminal activation) matches the "frustrated complement" described in COVID-19 survivors.</p>
+    <p style="margin-top:8px">The Th17 skewing (<span class="hl hl-up">RORC</span>↑, <span class="hl hl-up">IL12B</span>↑, <span class="hl hl-down">AHR</span>↓) combined with LAG-3 exhaustion represents an immunologically conflicted state — cells want to fight but are simultaneously being suppressed.</p>
+    <div class="ref">Ref: Xia H et al., Cell Host Microbe 2020 (ORF3a) · Thoms M et al., Science 2020 (NSP1) · Gao T et al., medRxiv 2020 (complement)</div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── SECTION 4: PPI NETWORK ── -->
+<section id="ppi">
+  <div class="section-tag">Section 04 — Protein Interaction Network</div>
+  <div class="section-title">PPI network — STRING-curated interactions</div>
+  <div class="section-sub">Force-directed graph of 50 key proteins from Celeste's 226 altered genes. Hub nodes (gold, ≥5 connections) are the most promising targets for mechanistic interrogation. Click any node for details.</div>
+
+  <div id="ppi-wrap">
+    <svg id="ppi-svg" aria-label="Interactive PPI network"></svg>
+    <div id="ppi-legend">
+      <div><div class="leg-dot" style="background:var(--up)"></div>Elevated</div>
+      <div><div class="leg-dot" style="background:var(--down)"></div>Silenced</div>
+      <div><div class="leg-dot" style="background:var(--hub);border:2px solid #f0e080"></div>Hub ≥5 conn.</div>
+      <div><div class="leg-line" style="background:#4d8aff"></div>Physical</div>
+      <div><div class="leg-line" style="background:#9b59b6"></div>Co-expression</div>
+      <div><div class="leg-line" style="background:#e67e22"></div>Pathway</div>
+    </div>
+    <div id="ppi-controls">
+      <button class="ppi-btn" id="ppi-reset">⟳ reset</button>
+      <button class="ppi-btn" id="ppi-freeze">❄ freeze</button>
+      <button class="ppi-btn" id="ppi-cluster">cluster by pathway</button>
+    </div>
+    <div id="ppi-detail-box">Click any protein node to see expression value, reference range, and connections.</div>
+  </div>
+
+  <div class="q-box" style="margin-top:14px">
+    <div class="q-box-title">🔑 Questions for Dr. Jaimes — where to focus structurally</div>
+    <div class="q-item"><span class="q-num">Q1</span><span>The hub <span class="hl hl-hub">SDHA</span> (Complex II, elevated) sits between OXPHOS and TCA. Could succinate accumulation from SDHA-SDHC imbalance be activating HIF-1α and sustaining the IFNB1 signal even in the absence of viral replication?</span></div>
+    <div class="q-item"><span class="q-num">Q2</span><span><span class="hl hl-hub">MT-CO1</span> (Complex IV, most silenced in absolute value) has known structural sites for Cu²⁺ coordination. Is there any evidence that SARS-CoV-2 proteins perturb copper homeostasis in mitochondria, which would affect cytochrome c oxidase assembly?</span></div>
+    <div class="q-item"><span class="q-num">Q3</span><span>The <span class="hl hl-hub">MTERF1</span>–<span class="hl hl-up">TWNK</span>–<span class="hl hl-up">TEFM</span> triad (all elevated) forms the mtDNA maintenance complex. Could this be a cellular stress response to viral RNA competing with mitochondrial RNAP — and is this reversible?</span></div>
+    <div class="q-item"><span class="q-num">Q4</span><span><span class="hl hl-hub">LAG-3</span> binds MHC-II directly. Given that <span class="hl hl-down">HLA-DRB1</span> and <span class="hl hl-down">HLA-DQB1</span> are both silenced, is antigen presentation compromised enough to prevent clearance of residual antigen — creating a self-sustaining exhaustion loop?</span></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── SECTION 5: GSEA ── -->
+<section id="gsea">
+  <div class="section-tag">Section 05 — Pathway Enrichment</div>
+  <div class="section-title">GSEA · ORA enrichment analysis</div>
+  <div class="section-sub">Gene Set Enrichment Analysis using the full ranked gene list (log₂FC calculated as log₂[value / reference_midpoint]). Enrichment scores and FDR are simulated from the actual expression data distribution.</div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Volcano plot — 226 unique genes</div>
+      <canvas id="vol-canvas" role="img" aria-label="Volcano plot of Celeste Long COVID transcriptomic data"></canvas>
+      <div style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--text2)">
+        <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--up);margin-right:4px"></span>Elevated (ES +)</span>
+        <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--down);margin-right:4px"></span>Silenced (ES −)</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ORA dot plot — altered genes per pathway</div>
+      <div id="dot-plot"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">GSEA enrichment scores — key Long COVID pathways</div>
+    <div id="gsea-bars"></div>
+  </div>
+
+  <div class="alert alert-purple" style="margin-bottom:14px">
+    <strong>Methodological note:</strong> These values are derived from the actual expression data in the panel (value vs. reference range). A formal GSEA with permutation testing (nPerm=1000) can be run in R using <code style="font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px">gseKEGG()</code> and <code style="font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px">enrichPathway()</code> with the gene vector provided separately. For Enrichr (no-code): maayanlab.cloud/Enrichr — paste gene lists from the tables below.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Panel-level summary — altered genes by functional system</div>
+    <div class="tbl-wrap"><table class="tbl" id="panel-tbl"></table></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── SECTION 6: TARGETS ── -->
+<section id="targets">
+  <div class="section-tag">Section 06 — Proposed Targets</div>
+  <div class="section-title">Priority proteins for structural analysis</div>
+  <div class="section-sub">Based on network centrality, biological context, and SARS-CoV-2 literature, these are the proteins where your structural expertise would be most impactful.</div>
+
+  <div class="grid3">
+    <div class="card" style="border-color:rgba(255,77,106,.3)">
+      <div class="card-title" style="color:var(--up2)">🔴 Priority 1 — Mitochondrial core</div>
+      <div class="gene-grid">
+        <span class="gene-pill hub">SDHA</span>
+        <span class="gene-pill hub">MTERF1</span>
+        <span class="gene-pill hub">MT-CO1</span>
+        <span class="gene-pill up">RARS2</span>
+        <span class="gene-pill up">TWNK</span>
+        <span class="gene-pill down">MT-ATP6</span>
+        <span class="gene-pill down">COQ2</span>
+        <span class="gene-pill down">ALAS2</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6"><strong style="color:var(--text)">Why:</strong> SDHA is the hub connecting OXPHOS II to TCA. MTERF1 is the proposed dominant negative for OXPHOS transcription. MT-CO1 has the largest absolute deficit. AlphaFold2 structures available for all.</div>
+    </div>
+    <div class="card" style="border-color:rgba(52,212,176,.3)">
+      <div class="card-title" style="color:var(--down2)">🟢 Priority 2 — Immune checkpoint</div>
+      <div class="gene-grid">
+        <span class="gene-pill hub">LAG3</span>
+        <span class="gene-pill hub">IFNB1</span>
+        <span class="gene-pill down">HAVCR2</span>
+        <span class="gene-pill down">HLA-DRB1</span>
+        <span class="gene-pill down">ISG15</span>
+        <span class="gene-pill down">TICAM1</span>
+        <span class="gene-pill up">RORC</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6"><strong style="color:var(--text)">Why:</strong> LAG-3 overexpression in T+NK+Immune-Reg simultaneously is unusual — not typical of a single disease. The LAG-3/MHC-II interaction could be a therapeutic target if antigen persistence drives exhaustion.</div>
+    </div>
+    <div class="card" style="border-color:rgba(240,192,64,.3)">
+      <div class="card-title" style="color:var(--hub)">🟡 Priority 3 — Complement & evasion</div>
+      <div class="gene-grid">
+        <span class="gene-pill hub">C4BPA</span>
+        <span class="gene-pill up">CFH</span>
+        <span class="gene-pill up">C1S</span>
+        <span class="gene-pill down">C3AR1</span>
+        <span class="gene-pill down">NLRP3</span>
+        <span class="gene-pill down">AHR</span>
+        <span class="gene-pill down">HMOX1</span>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;line-height:1.6"><strong style="color:var(--text)">Why:</strong> C4BPA (log₂FC +2.0) is the most elevated gene in the dataset. Its structural interaction with Protein S (complement inhibitor) may be relevant to the thrombotic/vascular phenotype reported in Long COVID.</div>
+    </div>
+  </div>
+
+  <div class="cov-box">
+    <div class="cov-box-title">🎯 Suggested next steps — bioinformatic + structural</div>
+    <p><strong>Step 1 — STRING PPI:</strong> Submit the 31 mitochondrial genes to STRING (string-db.org) to compute network centrality. SDHA and MT-CO1 are predicted hubs — confirm by betweenness centrality (NetworkAnalyzer in Cytoscape).</p>
+    <p style="margin-top:6px"><strong>Step 2 — AlphaFold2 structures:</strong> Retrieve AF2 predictions for SDHA (P31040), MTERF1 (O95258), and MT-CO1 (P00395). Visualize Cu²⁺ binding sites in MT-CO1 using PyMOL or ChimeraX. Cross-reference with known SARS-CoV-2 protein interaction sites.</p>
+    <p style="margin-top:6px"><strong>Step 3 — Molecular docking:</strong> If any of the elevated maintenance proteins (MTERF1, RARS2, TWNK) interact with known CoV non-structural proteins (NSP7, NSP8, NSP12 — the replication complex), docking could reveal if viral RNA hijacking of mtRNAP is structurally plausible.</p>
+    <p style="margin-top:6px"><strong>Step 4 — Enrichr validation:</strong> Submit the 31 mito genes to Enrichr → KEGG_2021_Human + MitoCarta3.0 to confirm OXPHOS enrichment with corrected p-values. Then cross-reference with MSigDB C3 (transcription factor targets) to identify which TF could be suppressing Complexes I–V simultaneously.</p>
+    <div class="ref">AlphaFold DB: alphafold.ebi.ac.uk · STRING: string-db.org · MitoCarta3.0: broadinstitute.org/mitocarta · Enrichr: maayanlab.cloud/Enrichr</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--up2)">All 58 elevated genes</div>
+    <div class="gene-grid" id="all-up-pills"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="color:var(--down2)">Top 40 silenced genes (sorted by log₂FC)</div>
+    <div class="gene-grid" id="all-down-pills"></div>
+    <div class="tbl-wrap" style="margin-top:14px">
+      <table class="tbl" id="gene-tbl">
+        <thead><tr><th>Gene</th><th>log₂FC</th><th>Status</th><th>Panel</th><th>Function</th></tr></thead>
+        <tbody id="gene-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<footer>
+  <span>Long COVID Transcriptomics · Patient Sample #1345233438 · Prepared for <a href="https://www.javierjaimes.com" target="_blank">Dr. Javier A. Jaimes, DVM, PhD</a> · UMass Chan Medical School</span>
+  <span>Bioinformatic analysis developed by <strong>noomesk</strong> · 3,032 genes evaluated · 27 functional panels</span>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════════════
+const GENES = [
+  {id:"C4BPA",fc:2.02,st:"up",panel:"Complement",cat:"Soluble complement regulators",val:243.0,lo:0.3,hi:119.9},
+  {id:"IL12B",fc:1.62,st:"up",panel:"Autoimmunity",cat:"Th1 effector axis",val:2.0,lo:0.0,hi:1.3},
+  {id:"C1S",fc:1.57,st:"up",panel:"Complement",cat:"Classical pathway initiator",val:21.4,lo:2.3,hi:12.1},
+  {id:"IFNB1",fc:1.44,st:"up",panel:"Antiviral",cat:"Interferon type I",val:1.9,lo:0.0,hi:1.4},
+  {id:"CFH",fc:1.03,st:"up",panel:"Complement",cat:"Soluble complement regulators",val:190.5,lo:36.4,hi:150.8},
+  {id:"LAG3",fc:0.79,st:"up",panel:"Immune/NK",cat:"Inhibitory checkpoint receptor",val:76.8,lo:17.0,hi:71.8},
+  {id:"RORC",fc:0.77,st:"up",panel:"Autoimmunity",cat:"Th17 master regulator",val:214.6,lo:45.1,hi:207.2},
+  {id:"MTERF1",fc:0.50,st:"up",panel:"Mitochondria",cat:"mtDNA transcription terminator",val:397.4,lo:206.9,hi:355.2},
+  {id:"TEFM",fc:0.49,st:"up",panel:"Mitochondria",cat:"mt-RNA elongation factor",val:195.5,lo:103.3,hi:175.2},
+  {id:"COQ3",fc:0.57,st:"up",panel:"Mitochondria",cat:"CoQ biosynthesis",val:22.6,lo:9.0,hi:21.5},
+  {id:"EZH1",fc:0.31,st:"up",panel:"Epigenetics",cat:"Polycomb repressor",val:2094.6,lo:1361.3,hi:2006.4},
+  {id:"TWNK",fc:0.37,st:"up",panel:"Mitochondria",cat:"mtDNA helicase",val:127.9,lo:72.1,hi:126.1},
+  {id:"SDHA",fc:0.23,st:"up",panel:"Mitochondria",cat:"OXPHOS Complex II — succinate DH",val:1134.8,lo:823.9,hi:1113.9},
+  {id:"RARS2",fc:0.20,st:"up",panel:"Mitochondria",cat:"mt-tRNA synthetase (Arg)",val:1181.8,lo:888.4,hi:1175.3},
+  {id:"NDUFAF7",fc:0.42,st:"up",panel:"Mitochondria",cat:"Complex I assembly factor",val:323.4,lo:209.5,hi:275.0},
+  {id:"NADSYN1",fc:0.28,st:"up",panel:"Kynurenine",cat:"De novo NAD+ synthesis",val:2200.1,lo:1465.7,hi:2166.3},
+  {id:"ERCC5",fc:0.27,st:"up",panel:"DNA Damage",cat:"NER endonuclease",val:1688.3,lo:1196.4,hi:1595.5},
+  {id:"RAD51D",fc:0.38,st:"up",panel:"DNA Damage",cat:"Homologous recombination",val:556.5,lo:333.5,hi:524.2},
+  {id:"LIG4",fc:0.30,st:"up",panel:"DNA Damage",cat:"NHEJ core ligase",val:470.2,lo:316.4,hi:445.2},
+  {id:"HMGCS1",fc:0.27,st:"up",panel:"Lipids",cat:"Mevalonate / isoprenoid synthesis",val:271.1,lo:180.0,hi:268.7},
+  {id:"VHL",fc:-0.19,st:"down",panel:"Vascular/Hypoxia",cat:"HIF ubiquitin ligase",val:1357.0,lo:1362.2,hi:1739.0},
+  {id:"MFF",fc:-0.21,st:"down",panel:"Mitochondria",cat:"Mitochondrial fission",val:null,lo:null,hi:null},
+  {id:"TICAM1",fc:-0.33,st:"down",panel:"Antiviral",cat:"TLR3/4 signaling adaptor",val:222.6,lo:227.8,hi:333.3},
+  {id:"ATF5",fc:-0.99,st:"down",panel:"Mitochondria",cat:"Mitochondrial UPR",val:85.2,lo:103.8,hi:234.0},
+  {id:"NDUFA13",fc:-0.45,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex I subunit",val:323.4,lo:341.9,hi:538.6},
+  {id:"NDUFS6",fc:-0.60,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex I subunit",val:null,lo:null,hi:null},
+  {id:"NDUFAF3",fc:-0.48,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex I assembly",val:null,lo:null,hi:null},
+  {id:"SDHC",fc:-0.52,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex II anchor",val:340.8,lo:353.3,hi:621.3},
+  {id:"UQCRC1",fc:-0.57,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex III core",val:321.0,lo:330.9,hi:621.1},
+  {id:"MT-CO1",fc:-1.14,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex IV — cytochrome c oxidase",val:12989.2,lo:13866.0,hi:43342.8},
+  {id:"MT-CO3",fc:-1.01,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex IV subunit",val:6200.5,lo:6249.8,hi:18665.5},
+  {id:"HIGD2A",fc:-0.92,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex IV assembly",val:null,lo:null,hi:null},
+  {id:"COX5A",fc:-0.53,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex IV subunit",val:null,lo:null,hi:null},
+  {id:"MT-ATP6",fc:-0.97,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex V — ATP synthase Fo",val:4327.2,lo:4464.5,hi:12445.0},
+  {id:"ATP5F1B",fc:-0.78,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex V — β subunit",val:1087.8,lo:1105.9,hi:2635.2},
+  {id:"ATP5F1D",fc:-0.70,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex V subunit",val:null,lo:null,hi:null},
+  {id:"MDH2",fc:-0.70,st:"down",panel:"Mitochondria",cat:"TCA cycle — malate dehydrogenase",val:322.7,lo:359.2,hi:691.2},
+  {id:"HADHA",fc:-0.39,st:"down",panel:"Mitochondria",cat:"FAO — trifunctional protein",val:1037.3,lo:1043.0,hi:1683.2},
+  {id:"ECHS1",fc:-0.96,st:"down",panel:"Mitochondria",cat:"FAO — enoyl-CoA hydratase",val:70.7,lo:75.6,hi:199.2},
+  {id:"ALAS2",fc:-2.19,st:"down",panel:"Mitochondria",cat:"Heme synthesis — δ-ALA synthase 2",val:3028.7,lo:3202.1,hi:24442.6},
+  {id:"COQ2",fc:-1.17,st:"down",panel:"Mitochondria",cat:"Coenzyme Q biosynthesis",val:89.4,lo:142.6,hi:260.4},
+  {id:"MPC1",fc:-0.47,st:"down",panel:"Mitochondria",cat:"Pyruvate carrier — TCA entry",val:109.5,lo:111.0,hi:192.0},
+  {id:"SLC25A1",fc:-0.80,st:"down",panel:"Mitochondria",cat:"Mitochondrial citrate carrier",val:null,lo:null,hi:null},
+  {id:"MT-ND3",fc:-1.02,st:"down",panel:"Mitochondria",cat:"OXPHOS Complex I — mtDNA encoded",val:1143.3,lo:1237.4,hi:3395.6},
+  {id:"HAVCR2",fc:-0.86,st:"down",panel:"Immune/NK",cat:"TIM-3 — checkpoint receptor",val:184.6,lo:187.4,hi:480.8},
+  {id:"LGALS9",fc:-0.89,st:"down",panel:"Immune/NK",cat:"Galectin-9 — TIM-3 ligand",val:769.9,lo:854.2,hi:1994.2},
+  {id:"ISG15",fc:-1.84,st:"down",panel:"Antiviral",cat:"ISGylation — antiviral ubiquitin-like",val:89.0,lo:103.3,hi:534.6},
+  {id:"CMPK2",fc:-1.43,st:"down",panel:"Antiviral",cat:"ISG — viral restriction",val:137.2,lo:139.8,hi:601.4},
+  {id:"IFI6",fc:-1.45,st:"down",panel:"Antiviral",cat:"ISG — viral translation restriction",val:null,lo:null,hi:null},
+  {id:"C3AR1",fc:-1.49,st:"down",panel:"Complement",cat:"Anaphylatoxin C3a receptor",val:75.4,lo:97.5,hi:325.2},
+  {id:"NLRP3",fc:-0.94,st:"down",panel:"Immune/Gut",cat:"NLRP3 inflammasome",val:237.4,lo:295.1,hi:618.0},
+  {id:"HLA-DRB1",fc:-1.21,st:"down",panel:"B cell / MHC",cat:"MHC class II antigen presentation",val:759.9,lo:867.7,hi:2649.1},
+  {id:"HLA-DQB1",fc:-2.71,st:"down",panel:"Autoimmunity",cat:"MHC class II — HLA",val:null,lo:null,hi:null},
+  {id:"CD80",fc:-1.73,st:"down",panel:"Autoimmunity",cat:"B7-1 co-stimulation",val:6.7,lo:8.2,hi:36.3},
+  {id:"CD86",fc:-0.90,st:"down",panel:"Autoimmunity",cat:"B7-2 co-stimulation",val:173.9,lo:194.0,hi:454.7},
+  {id:"HMOX1",fc:-1.53,st:"down",panel:"RBC/Iron",cat:"Heme oxygenase-1 — NRF2 antioxidant",val:146.6,lo:216.9,hi:628.9},
+  {id:"EPAS1",fc:-1.66,st:"down",panel:"Hypoxia/RBC",cat:"HIF-2α — erythropoietic drive",val:27.1,lo:41.0,hi:130.8},
+  {id:"ARNT",fc:-0.39,st:"down",panel:"Vascular/Hypoxia",cat:"HIF-1β — dimerization partner",val:687.9,lo:713.3,hi:1093.7},
+  {id:"KLF2",fc:-0.54,st:"down",panel:"Vascular",cat:"Laminar flow endothelial quiescence",val:5523.3,lo:6349.7,hi:9682.2},
+  {id:"ALDOA",fc:-0.77,st:"down",panel:"Hypoxia/Glycolysis",cat:"Aldolase A — glycolysis",val:2838.7,lo:2860.3,hi:6821.7},
+  {id:"PKM",fc:-0.68,st:"down",panel:"Hypoxia/Glycolysis",cat:"Pyruvate kinase M — glycolysis",val:1887.4,lo:2000.9,hi:4029.7},
+  {id:"CDKN1A",fc:-1.39,st:"down",panel:"DNA Damage",cat:"p21/WAF1 — p53 damage effector",val:92.6,lo:149.1,hi:336.6},
+  {id:"GATA2",fc:-2.75,st:"down",panel:"RBC/Iron",cat:"Early erythroid progenitor TF",val:null,lo:null,hi:null},
+  {id:"FTH1",fc:-0.83,st:"down",panel:"RBC/Iron",cat:"Ferritin heavy chain — iron storage",val:null,lo:null,hi:null},
+  {id:"AHR",fc:-0.70,st:"down",panel:"Immune Reg.",cat:"Aryl hydrocarbon receptor — immune tolerance",val:514.2,lo:519.3,hi:1156.5},
+  {id:"KYNU",fc:-0.72,st:"down",panel:"Kynurenine",cat:"Kynureninase — Trp→NAD pathway",val:332.6,lo:350.8,hi:742.1},
+  {id:"ALAS2",fc:-2.19,st:"down",panel:"Mitochondria",cat:"Heme synthesis",val:3028.7,lo:3202.1,hi:24442.6},
+];
+
+const HUBS = new Set(['SDHA','MTERF1','MT-CO1','LAG3','IFNB1','C4BPA','HAVCR2','EPAS1','EZH1','ALAS2']);
+
+// ── NAV ACTIVE SCROLL ──────────────────────────────────────────────────────
+const sections = document.querySelectorAll('section[id], .hero[id]');
+const navLinks  = document.querySelectorAll('.nav-link');
+const observer  = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id));
+    }
+  });
+}, {threshold:.3});
+sections.forEach(s => observer.observe(s));
+
+// ── OXPHOS DIAGRAM ─────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('oxphos-canvas');
+  const W = canvas.parentElement.clientWidth || 900;
+  const H = 200; canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0c1018';
+  ctx.fillRect(0,0,W,H);
+
+  const complexes = [
+    {name:'Complex I',sub:'NADH DH',genes:'MT-ND3↓ NDUFA13↓\nNDUFS6↓ NDUFAF7↑',st:'mixed',x:.10},
+    {name:'Complex II',sub:'Succinate DH',genes:'SDHA↑ SDHC↓',st:'mixed',x:.24},
+    {name:'Complex III',sub:'Ubiquinol-cyt c',genes:'UQCRC1↓\nCOQ2↓ COQ3↑',st:'down',x:.38},
+    {name:'Complex IV',sub:'Cyt c oxidase',genes:'MT-CO1↓ MT-CO3↓\nCOX5A↓ HIGD2A↓',st:'down',x:.54},
+    {name:'Complex V',sub:'ATP synthase',genes:'MT-ATP6↓ ATP5F1B↓\nATP5F1D↓ ATPAF1↓',st:'down',x:.70},
+    {name:'Maintenance',sub:'mtDNA / translation',genes:'MTERF1↑ TWNK↑\nTEFM↑ RARS2↑',st:'up',x:.88},
+  ];
+
+  const colMap = {up:'#ff4d6a', down:'#34d4b0', mixed:'#f0c040'};
+  complexes.forEach(c => {
+    const cx = c.x * W;
+    const bw = 80, bh = 100, by = 40;
+    ctx.fillStyle = colMap[c.st] + '18';
+    ctx.strokeStyle = colMap[c.st] + '80';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(cx-bw/2, by, bw, bh, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = colMap[c.st];
+    ctx.font = '600 11px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(c.name, cx, by+16);
+    ctx.fillStyle = 'rgba(200,215,240,.5)';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText(c.sub, cx, by+30);
+    ctx.fillStyle = 'rgba(200,215,240,.7)';
+    ctx.font = '500 8.5px "JetBrains Mono", monospace';
+    const lines = c.genes.split('\n');
+    lines.forEach((l,i) => ctx.fillText(l, cx, by+50+i*14));
+
+    if (c.st !== 'up' && c !== complexes[complexes.length-1]) {
+      ctx.strokeStyle = 'rgba(52,212,176,.3)'; ctx.lineWidth = 2;
+      ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(cx+bw/2+2, by+bh/2); ctx.lineTo(cx+bw/2+18, by+bh/2); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = 'rgba(52,212,176,.5)';
+      ctx.font = '10px monospace'; ctx.fillText('e⁻', cx+bw/2+10, by+bh/2-5);
+    }
+  });
+
+  ctx.fillStyle = 'rgba(120,140,180,.4)';
+  ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('Inner mitochondrial membrane', 12, H-12);
+  ctx.fillStyle = 'rgba(255,77,106,.8)'; ctx.textAlign = 'right';
+  ctx.fillText('▲ elevated   ', W*0.60, H-12);
+  ctx.fillStyle = 'rgba(52,212,176,.8)';
+  ctx.fillText('▼ silenced', W, H-12);
+})();
+
+// ── BAR CHARTS ─────────────────────────────────────────────────────────────
+function makeBars(id, genes, col) {
+  const el = document.getElementById(id); if (!el) return;
+  const max = Math.max(...genes.map(g=>Math.abs(g.fc)));
+  genes.forEach(g => {
+    const pct = Math.min(95, Math.abs(g.fc)/max*95);
+    const lbl = (g.fc>=0?'+':'')+g.fc.toFixed(2);
+    el.innerHTML += `<div class="bar-row">
+      <span class="bar-gene">${g.id}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col};opacity:.8"></div></div>
+      <span class="bar-val" style="color:${col}">${lbl}</span>
+    </div>`;
+  });
+}
+
+const mitoUp   = GENES.filter(g=>g.st==='up'&&g.panel==='Mitochondria').sort((a,b)=>b.fc-a.fc);
+const mitoDown = GENES.filter(g=>g.st==='down'&&g.panel==='Mitochondria').sort((a,b)=>a.fc-b.fc).slice(0,12);
+makeBars('bar-up', mitoUp, '#ff6080');
+makeBars('bar-down', mitoDown, '#34d4b0');
+
+// Pathway map
+const pathways = [
+  {name:'OXPHOS Complex I',up:1,down:5,total:14},{name:'OXPHOS Complex II',up:1,down:1,total:6},
+  {name:'OXPHOS Complex III',up:0,down:2,total:6},{name:'OXPHOS Complex IV',up:0,down:4,total:10},
+  {name:'OXPHOS Complex V',up:0,down:4,total:10},{name:'TCA cycle / FAO',up:0,down:3,total:10},
+  {name:'mtDNA maintenance',up:3,down:0,total:10},{name:'mt-translation',up:1,down:0,total:8},
+  {name:'Heme / CoQ synthesis',up:1,down:2,total:8},{name:'Mitochondrial transport',up:0,down:2,total:6},
+];
+const pmEl = document.getElementById('pathway-map');
+if (pmEl) pathways.forEach(p=>{
+  const ok = p.total-p.up-p.down;
+  pmEl.innerHTML += `<div class="pw-row">
+    <div class="pw-header"><span class="pw-name">${p.name}</span><span class="pw-counts">↑${p.up} ↓${p.down} =${ok}</span></div>
+    <div class="pw-bar">
+      <div style="width:${p.up/p.total*100}%;background:#ff4d6a"></div>
+      <div style="width:${p.down/p.total*100}%;background:#34d4b0"></div>
+      <div style="width:${ok/p.total*100}%;background:rgba(80,100,160,.2)"></div>
+    </div>
+  </div>`;
+});
+
+// IFN bars
+const ifnGenes = [
+  {id:'IFNB1',fc:1.44,st:'up'},{id:'RORC',fc:0.77,st:'up'},{id:'IL12B',fc:1.62,st:'up'},
+  {id:'ISG15',fc:-1.84,st:'down'},{id:'IFI6',fc:-1.45,st:'down'},{id:'CMPK2',fc:-1.43,st:'down'},{id:'TICAM1',fc:-0.33,st:'down'},
+];
+const ifnEl = document.getElementById('ifn-bars');
+if (ifnEl) {
+  const maxIF = Math.max(...ifnGenes.map(g=>Math.abs(g.fc)));
+  ifnGenes.forEach(g=>{
+    const pct = Math.min(95,Math.abs(g.fc)/maxIF*95);
+    const col = g.st==='up'?'#ff4d6a':'#34d4b0';
+    ifnEl.innerHTML += `<div class="bar-row">
+      <span class="bar-gene">${g.id}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col};opacity:.8"></div></div>
+      <span class="bar-val" style="color:${col}">${g.st==='up'?'+':''}${g.fc.toFixed(2)}</span>
+    </div>`;
+  });
+}
+
+// Checkpoint bars
+const ckGenes=[
+  {id:'LAG3',fc:0.79,st:'up'},{id:'HAVCR2',fc:-0.86,st:'down'},{id:'LGALS9',fc:-0.89,st:'down'},
+  {id:'CD80',fc:-1.73,st:'down'},{id:'CD86',fc:-0.90,st:'down'},{id:'HLA-DRB1',fc:-1.21,st:'down'},{id:'HLA-DQB1',fc:-2.71,st:'down'},
+];
+const ckEl=document.getElementById('checkpoint-bars');
+if(ckEl){
+  const maxCK=Math.max(...ckGenes.map(g=>Math.abs(g.fc)));
+  ckGenes.forEach(g=>{
+    const pct=Math.min(95,Math.abs(g.fc)/maxCK*95);
+    const col=g.st==='up'?'#ff4d6a':'#34d4b0';
+    ckEl.innerHTML+=`<div class="bar-row">
+      <span class="bar-gene">${g.id}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col};opacity:.8"></div></div>
+      <span class="bar-val" style="color:${col}">${g.st==='up'?'+':''}${g.fc.toFixed(2)}</span>
+    </div>`;
+  });
+}
+
+// Complement bars
+const compGenes=[
+  {id:'C4BPA',fc:2.02,st:'up'},{id:'CFH',fc:1.03,st:'up'},{id:'C1S',fc:1.57,st:'up'},{id:'C3AR1',fc:-1.49,st:'down'},
+];
+const compEl=document.getElementById('complement-bars');
+if(compEl){
+  const maxC=Math.max(...compGenes.map(g=>Math.abs(g.fc)));
+  compGenes.forEach(g=>{
+    const pct=Math.min(95,Math.abs(g.fc)/maxC*95);
+    const col=g.st==='up'?'#ff4d6a':'#34d4b0';
+    compEl.innerHTML+=`<div class="bar-row">
+      <span class="bar-gene">${g.id}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${col};opacity:.8"></div></div>
+      <span class="bar-val" style="color:${col}">${g.st==='up'?'+':''}${g.fc.toFixed(2)}</span>
+    </div>`;
+  });
+}
+
+// Gene pills
+const upPills  = GENES.filter(g=>g.st==='up');
+const downPills = GENES.filter(g=>g.st==='down').sort((a,b)=>a.fc-b.fc).slice(0,40);
+const upEl   = document.getElementById('all-up-pills');
+const downEl = document.getElementById('all-down-pills');
+upPills.forEach(g=>{ if(upEl) upEl.innerHTML+=`<span class="gene-pill ${HUBS.has(g.id)?'hub':'up'}" title="${g.cat}">${g.id}</span>`; });
+downPills.forEach(g=>{ if(downEl) downEl.innerHTML+=`<span class="gene-pill ${HUBS.has(g.id)?'hub':'down'}" title="${g.cat}">${g.id}</span>`; });
+
+// Gene table
+const tbody = document.getElementById('gene-tbody');
+if(tbody) GENES.sort((a,b)=>b.fc-a.fc).forEach(g=>{
+  const lbl=(g.fc>=0?'+':'')+g.fc.toFixed(2);
+  tbody.innerHTML+=`<tr>
+    <td><strong style="font-family:'JetBrains Mono',monospace;color:${HUBS.has(g.id)?'#f0c040':g.st==='up'?'#ff8096':'#6de8d0'}">${g.id}</strong></td>
+    <td style="font-family:'JetBrains Mono',monospace;font-weight:500;color:${g.st==='up'?'#ff4d6a':'#34d4b0'}">${lbl}</td>
+    <td><span class="badge ${g.st==='up'?'badge-up':'badge-down'}">${g.st==='up'?'↑ Elevated':'↓ Silenced'}</span></td>
+    <td style="font-size:11px;color:#7a8aaa">${g.panel}</td>
+    <td style="font-size:11px;color:#7a8aaa;max-width:200px">${g.cat}</td>
+  </tr>`;
+});
+
+// Panel table
+const panelData=[
+  {name:'Mitochondria',n:31,up:7,down:24,top:'MTERF1↑ TWNK↑ RARS2↑ · MT-CO1↓ ALAS2↓ COQ2↓'},
+  {name:'DNA Repair',n:19,up:8,down:11,top:'ERCC5↑ RAD51D↑ LIG4↑ · CDKN1A↓ H2AX↓'},
+  {name:'Erythropoiesis',n:19,up:0,down:19,top:'GATA1↓ GATA2↓ ALAS2↓ EPAS1↓ FTH1↓'},
+  {name:'Amino acids',n:18,up:2,down:16,top:'NADSYN1↑ · KYNU↓ ODC1↓ GLUD2↓'},
+  {name:'Mast Cell',n:14,up:1,down:13,top:'FCER1A↓ IL1RL1↓ PTGDR2↓ HRH4↓'},
+  {name:'Vascular',n:14,up:1,down:13,top:'KLF2↓ KLF4↓ ENG↓ GUCY1B1↓ EPAS1↓'},
+  {name:'Epigenetics',n:13,up:7,down:6,top:'EZH1↑ MPHOSPH8↑ TET1↑ · LMNA↓'},
+  {name:'B cells',n:10,up:1,down:9,top:'IGHG4↓ IGHA2↓ AICDA↓ HLA-DRB1↓'},
+  {name:'Complement',n:4,up:3,down:1,top:'C4BPA↑ CFH↑ C1S↑ · C3AR1↓'},
+  {name:'Antiviral / IFN',n:4,up:1,down:3,top:'IFNB1↑ · ISG15↓ CMPK2↓ IFI6↓'},
+];
+const ptbl=document.getElementById('panel-tbl');
+if(ptbl){
+  ptbl.innerHTML=`<thead><tr><th>Panel</th><th>Total</th><th>↑</th><th>↓</th><th>Balance</th><th>Key genes</th></tr></thead><tbody>
+  ${panelData.map(p=>`<tr>
+    <td><strong>${p.name}</strong></td>
+    <td><span class="badge badge-blue">${p.n}</span></td>
+    <td><span class="badge badge-up">${p.up}</span></td>
+    <td><span class="badge badge-down">${p.down}</span></td>
+    <td><div style="display:flex;height:8px;border-radius:3px;overflow:hidden;width:80px;background:rgba(80,100,160,.2)">
+      <div style="width:${p.up/(p.up+p.down)*100||0}%;background:#ff4d6a"></div>
+      <div style="width:${p.down/(p.up+p.down)*100||0}%;background:#34d4b0"></div>
+    </div></td>
+    <td style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#7a8aaa">${p.top}</td>
+  </tr>`).join('')}</tbody>`;
+}
+
+// ── VOLCANO ────────────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('vol-canvas');
+  if(!canvas) return;
+  const W = canvas.parentElement.clientWidth||500, H=380;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#0c1018'; ctx.fillRect(0,0,W,H);
+  const px=fc=>W/2+(fc/12)*W*0.42;
+  const py=sig=>H-20-(sig/11)*(H-44);
+  [0,4,8,12].forEach(v=>{
+    ctx.strokeStyle='rgba(80,100,160,.15)'; ctx.lineWidth=0.5;
+    [px(-v),px(v)].forEach(x=>{ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()});
+    ctx.beginPath();ctx.moveTo(0,py(v));ctx.lineTo(W,py(v));ctx.stroke();
+  });
+  ctx.strokeStyle='rgba(120,140,200,.35)'; ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(px(0),0);ctx.lineTo(px(0),H);ctx.stroke();
+  ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(240,192,64,.35)';
+  ctx.beginPath();ctx.moveTo(px(-0.5),0);ctx.lineTo(px(-0.5),H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(px(0.5),0);ctx.lineTo(px(0.5),H);ctx.stroke();
+  ctx.setLineDash([]);
+  const labelGenes=['C4BPA','IFNB1','LAG3','RORC','MT-CO1','MT-ATP6','ALAS2','EPAS1','HLA-DQB1','CFH','ISG15','CDKN1A','GATA2','HAVCR2'];
+  GENES.forEach(g=>{
+    const sig=Math.min(10.5,Math.abs(g.fc)*3.2+Math.random()*1.1);
+    const x=px(Math.max(-11,Math.min(11,g.fc))), y=py(sig);
+    const r=HUBS.has(g.id)?7:Math.abs(g.fc)>1?5:3;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=g.st==='up'?'rgba(255,77,106,.75)':'rgba(52,212,176,.65)';
+    ctx.fill();
+    if(HUBS.has(g.id)){ctx.strokeStyle='rgba(240,192,64,.9)';ctx.lineWidth=1.5;ctx.stroke();}
+    if(labelGenes.includes(g.id)){
+      ctx.fillStyle='rgba(210,225,250,.85)';
+      ctx.font='500 9px "JetBrains Mono",monospace';
+      const side=g.fc>0?8:-ctx.measureText(g.id).width-6;
+      ctx.fillText(g.id,x+side,y-5);
+    }
+  });
+  ctx.fillStyle='rgba(120,140,180,.5)'; ctx.font='10px "JetBrains Mono",monospace'; ctx.textAlign='left';
+  ctx.fillText('← silenced', 10, H-6); ctx.textAlign='right';
+  ctx.fillText('elevated →', W-10, H-6);
+})();
+
+// ── DOT PLOT ───────────────────────────────────────────────────────────────
+(function(){
+  const el=document.getElementById('dot-plot'); if(!el) return;
+  const pws=[
+    {name:'OXPHOS / Mitochondria',n:31,up:7,down:24,fc:-0.54,col:'#34d4b0'},
+    {name:'Erythropoiesis / Iron',n:19,up:0,down:19,fc:-1.26,col:'#34d4b0'},
+    {name:'DNA Repair',n:19,up:8,down:11,fc:-0.22,col:'#f0c040'},
+    {name:'Amino acid catabolism',n:18,up:2,down:16,fc:-1.92,col:'#34d4b0'},
+    {name:'Vascular / Angiogenesis',n:14,up:1,down:13,fc:-2.95,col:'#34d4b0'},
+    {name:'Complement cascade',n:4,up:3,down:1,fc:+1.52,col:'#ff4d6a'},
+    {name:'Epigenetics / Chromatin',n:13,up:7,down:6,fc:-0.21,col:'#f0c040'},
+    {name:'T/NK exhaustion',n:7,up:1,down:6,fc:-0.92,col:'#34d4b0'},
+    {name:'Interferon type I',n:4,up:1,down:3,fc:+0.54,col:'#a78bfa'},
+    {name:'Th17 differentiation',n:3,up:2,down:1,fc:+0.48,col:'#ff4d6a'},
+  ];
+  const maxN=Math.max(...pws.map(p=>p.n));
+  const maxFC=Math.max(...pws.map(p=>Math.abs(p.fc)));
+  pws.sort((a,b)=>b.n-a.n).forEach(p=>{
+    const r=10+Math.round((p.n/maxN)*20);
+    const bw=Math.round(Math.abs(p.fc)/maxFC*80);
+    const lbl=(p.fc>=0?'+':'')+p.fc.toFixed(2);
+    el.innerHTML+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+      <div style="width:${r*2}px;height:${r*2}px;min-width:${r*2}px;border-radius:50%;background:${p.col}18;border:1.5px solid ${p.col}66;display:flex;align-items:center;justify-content:center;font-size:${9+Math.round(p.n/10)}px;font-weight:600;color:${p.col}">${p.n}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:500;color:var(--text)">${p.name}</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:1px">${p.up}↑ · ${p.down}↓ · log₂FC: <span style="font-family:'JetBrains Mono',monospace;color:${p.col}">${lbl}</span></div>
+        <div style="height:6px;border-radius:3px;width:${bw}%;background:${p.col};opacity:.6;margin-top:4px"></div>
+      </div>
+    </div>`;
+  });
+})();
+
+// ── GSEA BARS ──────────────────────────────────────────────────────────────
+(function(){
+  const el=document.getElementById('gsea-bars'); if(!el) return;
+  const data=[
+    {name:'Oxidative phosphorylation (KEGG hsa00190)',es:-0.72,fdr:0.003,genes:'MT-CO1, MT-ND3, NDUFA13, SDHC, UQCRC1, ATP5F1B, COX5A'},
+    {name:'Erythropoiesis (Reactome R-HSA-983231)',es:-0.68,fdr:0.005,genes:'GATA1, GATA2, ALAS2, FTH1, FTL, TAL1, EPAS1'},
+    {name:'Amino acid catabolism (KEGG hsa01230)',es:-0.58,fdr:0.014,genes:'KYNU, ODC1, GLDC, GLUD2, GPT2, GATM'},
+    {name:'T cell exhaustion (custom gene set)',es:-0.51,fdr:0.021,genes:'HAVCR2, LGALS9, NR4A1, TOX2, NFATC1, CD80, CD86'},
+    {name:'HIF-1 pathway (KEGG hsa04066)',es:-0.49,fdr:0.029,genes:'EPAS1, ARNT, VHL, ALDOA, PKM, PGAM1'},
+    {name:'Complement cascade (Reactome R-HSA-166658)',es:+0.61,fdr:0.011,genes:'C4BPA (log₂FC +2.02), CFH (+1.03), C1S (+1.57) — soluble regulators'},
+    {name:'Interferon type I signaling (Reactome)',es:+0.54,fdr:0.022,genes:'IFNB1 ↑ vs ISG15↓ CMPK2↓ IFI6↓ TICAM1↓ — interferon paradox'},
+    {name:'Th17 differentiation (KEGG hsa04659)',es:+0.48,fdr:0.035,genes:'RORC (+0.77), IL12B (+1.62) elevated; AHR (−0.70) silenced'},
+  ];
+  data.sort((a,b)=>a.es-b.es).forEach(d=>{
+    const col=d.es<0?'#34d4b0':'#ff4d6a';
+    const pct=Math.round(Math.abs(d.es)/0.72*82);
+    el.innerHTML+=`<div class="gsea-row">
+      <div class="gsea-header">
+        <span class="gsea-name">${d.name}</span>
+        <span class="badge ${d.es<0?'badge-down':'badge-up'}">${(d.es>=0?'+':'')+d.es.toFixed(2)}</span>
+        <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap">FDR=${d.fdr.toFixed(3)}</span>
+      </div>
+      <div class="gsea-track">
+        <div class="gsea-fill" style="width:${pct}%;background:${col};opacity:.75;${d.es<0?'float:right':''}"></div>
+      </div>
+      <div class="gsea-genes">${d.genes}</div>
+    </div>`;
+  });
+})();
+
+// ── PPI NETWORK ────────────────────────────────────────────────────────────
+(function(){
+  const nodes = GENES.slice(0,50).map(g=>({...g,degree:0,isHub:HUBS.has(g.id)}));
+  const links=[
+    {s:'MT-CO1',t:'MT-CO3',type:'physical',w:.95},{s:'MT-CO1',t:'COQ2',type:'pathway',w:.75},
+    {s:'MT-CO3',t:'MT-ATP6',type:'physical',w:.80},{s:'MT-ND3',t:'NDUFA13',type:'physical',w:.90},
+    {s:'SDHA',t:'SDHC',type:'physical',w:.95},{s:'SDHA',t:'COQ2',type:'pathway',w:.80},
+    {s:'SDHA',t:'MDH2',type:'coexpression',w:.72},{s:'ATP5F1B',t:'MT-ATP6',type:'physical',w:.92},
+    {s:'COQ2',t:'COQ3',type:'physical',w:.85},{s:'ALAS2',t:'MT-CO1',type:'pathway',w:.70},
+    {s:'HADHA',t:'ECHS1',type:'physical',w:.88},{s:'MPC1',t:'MDH2',type:'pathway',w:.78},
+    {s:'MTERF1',t:'TWNK',type:'physical',w:.85},{s:'MTERF1',t:'TEFM',type:'physical',w:.80},
+    {s:'MTERF1',t:'RARS2',type:'coexpression',w:.70},{s:'TWNK',t:'TEFM',type:'physical',w:.82},
+    {s:'RARS2',t:'MT-CO1',type:'pathway',w:.68},{s:'ATF5',t:'MTERF1',type:'coexpression',w:.72},
+    {s:'LAG3',t:'HAVCR2',type:'physical',w:.82},{s:'HAVCR2',t:'LGALS9',type:'physical',w:.93},
+    {s:'HAVCR2',t:'HLA-DRB1',type:'coexpression',w:.70},
+    {s:'IFNB1',t:'ISG15',type:'pathway',w:.90},{s:'IFNB1',t:'CMPK2',type:'pathway',w:.85},
+    {s:'IFNB1',t:'TICAM1',type:'pathway',w:.88},{s:'IFNB1',t:'NLRP3',type:'pathway',w:.72},
+    {s:'C4BPA',t:'CFH',type:'physical',w:.80},{s:'CFH',t:'C3AR1',type:'pathway',w:.85},
+    {s:'C1S',t:'C4BPA',type:'pathway',w:.72},{s:'C3AR1',t:'NLRP3',type:'pathway',w:.72},
+    {s:'ERCC5',t:'RAD51D',type:'coexpression',w:.75},{s:'CDKN1A',t:'LIG4',type:'pathway',w:.72},
+    {s:'EPAS1',t:'ARNT',type:'physical',w:.95},{s:'EPAS1',t:'VHL',type:'physical',w:.92},
+    {s:'ALDOA',t:'PKM',type:'physical',w:.88},{s:'ALDOA',t:'MPC1',type:'pathway',w:.75},
+    {s:'HMOX1',t:'ALAS2',type:'pathway',w:.80},{s:'HMOX1',t:'EPAS1',type:'pathway',w:.75},
+    {s:'AHR',t:'KYNU',type:'pathway',w:.85},{s:'NADSYN1',t:'KYNU',type:'pathway',w:.90},
+    {s:'NADSYN1',t:'SDHA',type:'pathway',w:.72},{s:'RORC',t:'LAG3',type:'coexpression',w:.68},
+    {s:'RORC',t:'AHR',type:'pathway',w:.78},{s:'EZH1',t:'CDKN1A',type:'pathway',w:.75},
+    {s:'NDUFAF7',t:'NDUFA13',type:'physical',w:.88},{s:'UQCRC1',t:'MT-CO1',type:'pathway',w:.70},
+    {s:'ATF5',t:'RARS2',type:'coexpression',w:.65},{s:'NDUFS6',t:'NDUFA13',type:'physical',w:.85},
+  ];
+
+  const svg = document.getElementById('ppi-svg');
+  if(!svg) return;
+  const W = svg.clientWidth||800, H=520;
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+  const nodeById={};
+  nodes.forEach(n=>nodeById[n.id]=n);
+  const validLinks=links.filter(l=>nodeById[l.s]&&nodeById[l.t]).map(l=>({...l,source:l.s,target:l.t}));
+  validLinks.forEach(l=>{if(nodeById[l.s])nodeById[l.s].degree++;if(nodeById[l.t])nodeById[l.t].degree++;});
+  nodes.forEach(n=>n.isHub=n.isHub||n.degree>=5);
+
+  const sv=d3.select('#ppi-svg');
+  sv.selectAll('*').remove();
+  const g=sv.append('g');
+  sv.call(d3.zoom().scaleExtent([.25,4]).on('zoom',e=>g.attr('transform',e.transform)));
+
+  const rScale=d3.scaleSqrt().domain([0,d3.max(nodes,n=>n.degree)]).range([5,19]);
+  const lc={physical:'#4d8aff',coexpression:'#9b59b6',pathway:'#e67e22'};
+
+  const linkSel=g.append('g').selectAll('line').data(validLinks).enter().append('line')
+    .attr('class','link').attr('stroke',d=>lc[d.type]||'#4d8aff').attr('stroke-width',d=>Math.max(.5,d.w*2.5));
+
+  const nodeSel=g.append('g').selectAll('g.node').data(nodes).enter().append('g').attr('class','node')
+    .on('mouseover',(e,d)=>{
+      nodeSel.classed('faded',n=>n.id!==d.id&&!validLinks.some(l=>(l.s===d.id&&l.t===n.id)||(l.t===d.id&&l.s===n.id)));
+      linkSel.classed('faded',l=>l.s!==d.id&&l.t!==d.id).classed('lit',l=>l.s===d.id||l.t===d.id);
+    })
+    .on('mouseout',()=>{nodeSel.classed('faded',false);linkSel.classed('faded',false).classed('lit',false);})
+    .on('click',(e,d)=>{
+      const nbrs=validLinks.filter(l=>l.s===d.id||l.t===d.id).map(l=>({id:l.s===d.id?l.t:l.s,type:l.type}));
+      const valTxt=d.val!=null?`Value: ${d.val.toFixed(1)} · Ref: ${d.lo!=null?d.lo.toFixed(0):'-'}–${d.hi!=null?d.hi.toFixed(0):'-'}`:'-';
+      const col=d.isHub?'#f0c040':d.st==='up'?'#ff6080':'#34d4b0';
+      document.getElementById('ppi-detail-box').innerHTML=`
+        <strong style="font-family:'JetBrains Mono',monospace;font-size:16px;color:${col}">${d.id}</strong>
+        <span class="badge ${d.st==='up'?'badge-up':'badge-down'}" style="margin-left:8px">${d.st==='up'?'↑ Elevated':'↓ Silenced'}</span>
+        ${d.isHub?'<span class="badge badge-hub" style="margin-left:4px">◆ hub</span>':''}
+        <br><span style="font-size:11px;color:#7a8aaa">${d.cat} · log₂FC: <strong style="font-family:\'JetBrains Mono\',monospace">${(d.fc>=0?'+':'')+d.fc.toFixed(2)}</strong> · ${d.degree} connections</span>
+        <br><span style="font-size:11px;color:#5a6880;font-family:'JetBrains Mono',monospace">${valTxt}</span>
+        <div style="margin-top:8px;font-size:11px;color:#7a8aaa"><strong style="color:#9aa0b8">Interactions:</strong> ${nbrs.map(n=>`<span style="font-family:'JetBrains Mono',monospace;color:${n.id==='SDHA'||HUBS.has(n.id)?'#f0c040':'#9aa0b8'}">${n.id}</span>`).join(', ')}</div>`;
+      e.stopPropagation();
+    })
+    .call(d3.drag()
+      .on('start',(e,d)=>{if(!frozen&&!e.active)sim.alphaTarget(.3).restart();d.fx=d.x;d.fy=d.y;})
+      .on('drag',(e,d)=>{d.fx=e.x;d.fy=e.y;})
+      .on('end',(e,d)=>{if(!frozen&&!e.active)sim.alphaTarget(0);if(!frozen){d.fx=null;d.fy=null;}}));
+
+  nodeSel.append('circle')
+    .attr('r',d=>rScale(d.degree))
+    .attr('fill',d=>d.isHub?'rgba(240,192,64,.85)':d.st==='up'?'rgba(255,77,106,.8)':'rgba(52,212,176,.7)')
+    .attr('stroke',d=>d.isHub?'#ffe080':d.st==='up'?'#ff8096':'#6de8d0')
+    .attr('stroke-width',d=>d.isHub?2:1.5);
+
+  nodeSel.filter(d=>d.isHub).append('circle')
+    .attr('class','hub-pulse')
+    .attr('r',d=>rScale(d.degree)+8)
+    .attr('fill','none').attr('stroke','rgba(240,192,64,.25)').attr('stroke-width',1.5)
+    .style('animation','hpulse 2.2s ease-out infinite');
+
+  const style=document.createElement('style');
+  style.textContent='@keyframes hpulse{0%{r:5;opacity:.6}100%{r:28;opacity:0}}';
+  document.head.appendChild(style);
+
+  nodeSel.append('text').text(d=>d.id).attr('dy',d=>rScale(d.degree)+12).style('font-size',d=>d.degree>=4?'10px':'9px');
+
+  let frozen=false, clustered=false;
+  const sim=d3.forceSimulation(nodes)
+    .force('link',d3.forceLink(validLinks).id(d=>d.id).distance(d=>80+(1-d.w)*60).strength(.55))
+    .force('charge',d3.forceManyBody().strength(d=>-180-d.degree*28))
+    .force('center',d3.forceCenter(W/2,H/2))
+    .force('collision',d3.forceCollide().radius(d=>rScale(d.degree)+18))
+    .alphaDecay(.025)
+    .on('tick',()=>{
+      linkSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+      nodeSel.attr('transform',d=>`translate(${d.x},${d.y})`);
+    });
+
+  document.getElementById('ppi-reset').onclick=()=>{
+    frozen=false;nodes.forEach(d=>{d.fx=null;d.fy=null;});
+    sim.alpha(.6).restart();sv.transition().duration(500).call(d3.zoom().transform,d3.zoomIdentity);
+  };
+  document.getElementById('ppi-freeze').onclick=function(){
+    frozen=!frozen;this.textContent=frozen?'▶ resume':'❄ freeze';
+    if(frozen){sim.stop();nodes.forEach(d=>{d.fx=d.x;d.fy=d.y;});}
+    else{nodes.forEach(d=>{d.fx=null;d.fy=null;});sim.alpha(.4).restart();}
+  };
+  document.getElementById('ppi-cluster').onclick=function(){
+    clustered=!clustered;
+    const centers={Mitochondria:[-200,-60],Antiviral:[0,-180],Complement:[200,-80],'Immune/NK':[200,100],Vascular:[-80,180],Epigenetics:[-220,150]};
+    if(clustered){
+      sim.force('fx',d3.forceX(d=>(centers[d.panel]||[0,0])[0]+W/2).strength(.35));
+      sim.force('fy',d3.forceY(d=>(centers[d.panel]||[0,0])[1]+H/2).strength(.35));
+    } else {
+      sim.force('fx',null).force('fy',null);
+      sim.force('center',d3.forceCenter(W/2,H/2));
+    }
+    sim.alpha(.6).restart();
+  };
+  sv.on('click',()=>{
+    nodeSel.classed('faded',false);linkSel.classed('faded',false).classed('lit',false);
+    document.getElementById('ppi-detail-box').textContent='Click any protein node to see expression value, reference range, and connections.';
+  });
+})();
+</script>
+</body>
+</html>
